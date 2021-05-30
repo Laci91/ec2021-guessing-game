@@ -21,7 +21,7 @@ public class UserGuideComponent extends JPanel {
             "A K\u00FCld\u00E9s gombra kattintva a felugr\u00F3 ablak bez\u00E1rul, \u00E9s a t\u00E1bl\u00E1zat friss\u00FCl az \u00FAj eredm\u00E9nnyel. </p><br/>" +
             "<p><b>\u00C1ll\u00E1s</b><br/> Itt a tippverseny jelenlegi \u00E1ll\u00E1sa l\u00E1that\u00F3 pontsz\u00E1m szerint rendezve. </p><br/>" +
             "<p><b>Kedvencek</b><br/>Pontosan megegyezik a \"Meccsek\" oldallal, annyi kiv\u00E9tellel hogy itt csak a kedvencekk\u00E9nt megjel\u00F6lt j\u00E1t\u00E9kosok tipposzlopa l\u00E1that\u00F3. </p><br/>" +
-            "<p><b>Technikai inform\u00E1ciok</b><br/>A program forr\u00E1sk\u00F3dja el\u00E9rhet\u0151 <a href=\"\">ezen</a> a linken<br/>Ha szeretn\u00E9d megn\u00E9zni a h\u00E1tt\u00E9rben l\u00E9v\u0151 Excel f\u00E1jlt, erre a gombra kattintva megteheted:</p></html>"
+            "<p><b>Technikai inform\u00E1ciok</b><br/>A program forr\u00E1sk\u00F3dja el\u00E9rhet\u0151 <a href=\"https://github.com/Laci91/ec2021-guessing-game\">ezen</a> a linken<br/>Ha szeretn\u00E9d megn\u00E9zni a h\u00E1tt\u00E9rben l\u00E9v\u0151 Excel f\u00E1jlt, erre a gombra kattintva megteheted:</p></html>"
             );
         label.setFont(label.getFont().deriveFont(18f));
 
