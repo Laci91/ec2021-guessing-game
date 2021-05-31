@@ -4,8 +4,8 @@ import com.formdev.flatlaf.FlatLightLaf;
 import tippjatek.gamesheet.GameSheetManager;
 import tippjatek.model.Game;
 import tippjatek.ui.DisplayStrings;
-import tippjatek.ui.matches.MatchesComponent;
 import tippjatek.ui.guide.UserGuideComponent;
+import tippjatek.ui.matches.MatchesComponent;
 import tippjatek.ui.standings.StandingsComponent;
 
 import javax.swing.*;
@@ -33,10 +33,12 @@ public class MainApplication {
             tabbedPane.addTab(DisplayStrings.FAVOURITES, favouritesComponent);
             tabbedPane.addTab(DisplayStrings.README, new UserGuideComponent());
             tabbedPane.addChangeListener(e -> {
-                if (tabbedPane.getSelectedIndex() == 1) {
+                if (tabbedPane.getSelectedIndex() == 0) {
+                    matchesComponent.recalculateComponent(game, false);
+                } else if (tabbedPane.getSelectedIndex() == 1) {
                     standingsComponent.recalculateStandings();
                 } else if (tabbedPane.getSelectedIndex() == 2) {
-                    favouritesComponent.recalculateComponent(game);
+                    favouritesComponent.recalculateComponent(game, true);
                 }
             });
             frame.getContentPane().add(tabbedPane);

@@ -7,10 +7,11 @@ import tippjatek.ui.UIUtil;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.util.Comparator;
 import java.util.List;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Vector;
 
 public class StandingsComponent extends JScrollPane {
 
@@ -41,17 +42,17 @@ public class StandingsComponent extends JScrollPane {
         columnHeaders.add(DisplayStrings.PLACE);
         columnHeaders.add(DisplayStrings.NAME);
         columnHeaders.add(DisplayStrings.SCORE);
+        columnHeaders.add("Kedvenc?");
         dtm.setColumnIdentifiers(columnHeaders);
-        Map<String, Integer> scores = game.getPlayerObjects().stream().collect(Collectors.toMap(Player::getName, Player::getScore, (a, b) -> a));
-        List<Map.Entry<String, Integer>> scoreEntries = new ArrayList<>(scores.entrySet());
-        scoreEntries.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+        List<Player> players = game.getPlayerObjects();
+        players.sort(Comparator.comparingInt(Player::getScore).reversed());
 
         Vector<String> rowValues;
         int lastPlace = 1;
-        for (int i=0;i< scoreEntries.size();i++) {
-            Map.Entry<String, Integer> currentEntry = scoreEntries.get(i);
+        for (int i=0;i<players.size();i++) {
             rowValues = new Vector<>();
-            if (i == 0 || scoreEntries.get(i - 1).getValue().equals(currentEntry.getValue())) {
+            Player currentPlayer = players.get(i);
+            if (i == 0 || players.get(i - 1).getScore() == currentPlayer.getScore()) {
                 rowValues.add(lastPlace + ".");
             } else {
                 int currentPlace = i + 1;
@@ -59,8 +60,9 @@ public class StandingsComponent extends JScrollPane {
                 lastPlace = currentPlace;
             }
 
-            rowValues.add(UIUtil.getPlayerDisplayName(currentEntry.getKey()));
-            rowValues.add(currentEntry.getValue().toString());
+            rowValues.add(UIUtil.getPlayerDisplayName(currentPlayer.getName()));
+            rowValues.add(String.valueOf(currentPlayer.getScore()));
+            rowValues.add(currentPlayer.isFavourite() ? "Y" : "N");
             dtm.addRow(rowValues);
         }
 
@@ -68,8 +70,18 @@ public class StandingsComponent extends JScrollPane {
     }
 
     private static JTable getTable(DefaultTableModel dtm) {
-        JTable table = new JTable(dtm);
+        JTable table = new JTable(dtm) {
+            @Override
+            public TableCellRenderer getCellRenderer(int row, int column) {
+                return new FavouriteTableCellRenderer();
+            }
+        };
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        table.getColumnModel().getColumn(3).setMinWidth(0);
+        table.getColumnModel().getColumn(3).setMaxWidth(0);
+        table.getColumnModel().getColumn(3).setWidth(0);
+        table.getColumnModel().getColumn(3).setResizable(false);
+        table.getColumnModel().removeColumn(table.getColumnModel().getColumn(3));
         return table;
     }
 }

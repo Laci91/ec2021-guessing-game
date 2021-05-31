@@ -25,24 +25,24 @@ public class MatchesComponent extends JScrollPane {
         super(component);
     }
 
-    public void recalculateComponent(Game game) {
-        DefaultTableModel model = getTableModel(game, true);
+    public void recalculateComponent(Game game, boolean favouritesOnly) {
+        DefaultTableModel model = getTableModel(game, favouritesOnly);
         JTable view = (JTable)this.getViewport().getView();
         view.setModel(model);
-        setupHeaderCellRenderer(game, true, view);
+        setupHeaderCellRenderer(game, favouritesOnly, view);
         view.repaint();
     }
 
     public static MatchesComponent fromGame(JFrame parent, Game game, boolean favouritesOnly) {
         DefaultTableModel dtm = getTableModel(game, favouritesOnly);
         JTable table = getTable(dtm, game, favouritesOnly);
-        JList<String> rowHeader = getRowHeader(parent, game, table);
+        JList<String> rowHeader = getRowHeader(parent, game, table, favouritesOnly);
         MatchesComponent matchesComponent = new MatchesComponent(table);
         matchesComponent.setRowHeaderView(rowHeader);
         return matchesComponent;
     }
 
-    private static JList<String> getRowHeader(JFrame parent, Game game, JTable table) {
+    private static JList<String> getRowHeader(JFrame parent, Game game, JTable table, boolean favouritesOnly) {
         ListModel<String> lm = new AbstractListModel<String>() {
             final String[] headers = game.getMatches().toArray(new String[0]);
 
@@ -77,7 +77,7 @@ public class MatchesComponent extends JScrollPane {
             private void registerResult(int matchIndex, MatchScore result) {
                 game.setResult(matchIndex, result);
                 table.getModel().setValueAt(result.getScoreText(), matchIndex + 1, 0);
-                List<String> players = game.getPlayers();
+                List<String> players = game.getPlayerObjects().stream().filter(pl -> !favouritesOnly || pl.isFavourite()).map(Player::getName).collect(Collectors.toList());
                 for (int i=0;i<players.size();i++) {
                     table.getModel().setValueAt(game.getPlayer(players.get(i)).getScore(), 0, i + 1);
                 }
@@ -103,7 +103,7 @@ public class MatchesComponent extends JScrollPane {
                     return;
                 }
                 game.getPlayerObjects().get(colIndex - 1).switchFavourite();
-                new GameSheetManager().changeFavouriteStatus((String)table.getTableHeader().getColumnModel().getColumn(colIndex - 1).getHeaderValue());
+                new GameSheetManager().changeFavouriteStatus((String)table.getTableHeader().getColumnModel().getColumn(colIndex).getHeaderValue());
                 table.getTableHeader().getColumnModel().getColumn(colIndex).setHeaderRenderer(new VerticalHeaderRenderer(game.getPlayerObjects().get(colIndex - 1).isFavourite()));
                 table.repaint();
             }

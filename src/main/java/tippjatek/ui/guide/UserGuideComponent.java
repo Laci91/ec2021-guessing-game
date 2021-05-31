@@ -4,11 +4,14 @@ import tippjatek.gamesheet.GameSheetManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class UserGuideComponent extends JPanel {
     public UserGuideComponent() {
         super();
-        JLabel label = new JLabel(
+        JLabel mainLabel = new JLabel(
             "<html>Ez az alkalmaz\u00E1s a 2021-es foci EB tippj\u00E1t\u00E9k k\u00F6vet\u00E9s\u00E9re szolg\u00E1l. <br/>" +
             "Az alkalmaz\u00E1s a h\u00E1tt\u00E9rben a m\u00E1s j\u00F3l ismert Excel t\u00E1bl\u00E1zatot haszn\u00E1lja adatt\u00E1rol\u00E1sra, de a telep\u00EDtett Excel verzi\u00F3t\u00F3l f\u00FCggetlen\u00FCl m\u0171k\u00F6dik. <br/>" +
             "Lehet\u0151s\u00E9ged van rajta megn\u00E9zni az \u00F6sszes be\u00E9rkezett tippet, bevinni az \u00FAj eredm\u00E9nyeket illetve a jelenlegi \u00E1ll\u00E1s k\u00F6vet\u00E9s\u00E9t. <br/><br/>" +
@@ -21,16 +24,26 @@ public class UserGuideComponent extends JPanel {
             "A K\u00FCld\u00E9s gombra kattintva a felugr\u00F3 ablak bez\u00E1rul, \u00E9s a t\u00E1bl\u00E1zat friss\u00FCl az \u00FAj eredm\u00E9nnyel. </p><br/>" +
             "<p><b>\u00C1ll\u00E1s</b><br/> Itt a tippverseny jelenlegi \u00E1ll\u00E1sa l\u00E1that\u00F3 pontsz\u00E1m szerint rendezve. </p><br/>" +
             "<p><b>Kedvencek</b><br/>Pontosan megegyezik a \"Meccsek\" oldallal, annyi kiv\u00E9tellel hogy itt csak a kedvencekk\u00E9nt megjel\u00F6lt j\u00E1t\u00E9kosok tipposzlopa l\u00E1that\u00F3. </p><br/>" +
-            "<p><b>Technikai inform\u00E1ciok</b><br/>A program forr\u00E1sk\u00F3dja el\u00E9rhet\u0151 <a href=\"https://github.com/Laci91/ec2021-guessing-game\">ezen</a> a linken<br/>Ha szeretn\u00E9d megn\u00E9zni a h\u00E1tt\u00E9rben l\u00E9v\u0151 Excel f\u00E1jlt, erre a gombra kattintva megteheted:</p></html>"
-            );
-        label.setFont(label.getFont().deriveFont(18f));
+            "<p><b>Technikai inform\u00E1ciok</b><br/>A program forr\u00E1sk\u00F3dja el\u00E9rhet\u0151:</html>");
+        mainLabel.setFont(mainLabel.getFont().deriveFont(18f));
+        JButton openGithubRepoButton = new JButton("Mutasd a program forr\u00E1s\u00E1t");
+        openGithubRepoButton.addActionListener(action -> {
+            try {
+                Desktop.getDesktop().browse(new URI("https://github.com/Laci91/ec2021-guessing-game"));
+            } catch (IOException | URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
+        JLabel excelLabel = new JLabel("<html>Ha szeretn\u00E9d megn\u00E9zni a h\u00E1tt\u00E9rben l\u00E9v\u0151 Excel f\u00E1jlt, erre a gombra kattintva megteheted:</p></html>");
         JButton openExcelButton = new JButton("Mutasd az Excel f\u00E1jlt!");
         openExcelButton.addActionListener(action -> new GameSheetManager().openExcelFile());
 
         BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
         this.setLayout(layout);
-        this.add(label);
+        this.add(mainLabel);
+        this.add(openGithubRepoButton);
+        this.add(excelLabel);
         this.add(openExcelButton);
     }
 }
